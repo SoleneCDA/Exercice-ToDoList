@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ma To-Do List</title>
+    <style>
+        .task {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ma To-Do List</h1>
+    <ul id="todoList">
+        <li>
+            <input type="checkbox" onchange="toggleTask(this)">
+            <span class="task" onclick="showOptions(this)">Tâche 1</span>
+        </li>
+        <li>
+            <input type="checkbox" onchange="toggleTask(this)">
+            <span class="task" onclick="showOptions(this)">Tâche 2</span>
+        </li>
+        <li>
+            <input type="checkbox" onchange="toggleTask(this)">
+            <span class="task" onclick="showOptions(this)">Tâche 3</span>
+        </li>
+    </ul>
+
+    <form id="addTaskForm">
+        <input type="text" id="newTask" placeholder="Nouvelle tâche">
+        <button type="button" onclick="addTask()">Ajouter</button>
+    </form>
+
+    <div id="taskOptions" style="display: none;">
+        <p>Que voulez-vous faire avec cette tâche ?</p>
+        <button onclick="editTask()">Modifier</button>
+        <button onclick="confirmDeleteTask()">Supprimer</button>
+    </div>
+
+    <script>
+        let selectedTask = null;
+
+        function toggleTask(checkbox) {
+            const li = checkbox.parentElement;
+            const task = li.querySelector(".task");
+            task.style.textDecoration = checkbox.checked ? "line-through" : "none";
+        }
+
+        function editTask() {
+            if (selectedTask) {
+                const newTaskText = prompt("Modifier la tâche :", selectedTask.textContent);
+                if (newTaskText !== null) {
+                    selectedTask.textContent = newTaskText;
+                }
+            }
+            selectedTask = null;
+            closeTaskOptions();
+        }
+
+        function confirmDeleteTask() {
+            if (selectedTask) {
+                const li = selectedTask.parentElement;
+                const confirmed = confirm("Voulez-vous vraiment supprimer cette tâche ?");
+                if (confirmed) {
+                    li.remove();
+                }
+            }
+            selectedTask = null;
+            closeTaskOptions();
+        }
+
+        function showOptions(taskElement) {
+            selectedTask = taskElement;
+            const taskOptions = document.getElementById("taskOptions");
+            taskOptions.style.display = "block";
+        }
+
+        function closeTaskOptions() {
+            const taskOptions = document.getElementById("taskOptions");
+            taskOptions.style.display = "none";
+        }
+
+        function addTask() {
+            const taskText = document.getElementById("newTask").value;
+            if (taskText.trim() !== "") {
+                const ul = document.getElementById("todoList");
+                const li = document.createElement("li");
+                li.innerHTML = '<input type="checkbox" onchange="toggleTask(this)"> <span class="task" onclick="showOptions(this)">' + taskText + '</span>';
+                ul.appendChild(li);
+                document.getElementById("newTask").value = "";
+            }
+        }
+    </script>
+</body>
+</html>
+
+
